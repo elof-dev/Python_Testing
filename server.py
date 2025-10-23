@@ -59,8 +59,26 @@ def purchasePlaces():
     MAX_BOOKING = 12
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
+
+    places = request.form.get('places')
+    if not places:
+        flash("Please enter a number of places.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+
+    # même si on a vérifié dans le formulaire sur le HTML avec un input de type "number",
+    # on doit quand même gérer le cas où un utilisateur malveillant envoie une valeur non numérique
+    # en modifiant via les outils de développement du navigateur. 
+    try:
+        placesRequired = int(places)
+    except ValueError:
+        flash("Invalid number of places.")
+        return render_template('welcome.html', club=club, competitions=competitions)
+
     club_points = int(club['points'])
+
+    if placesRequired <= 0:
+        flash("Invalid number of places.")
+        return render_template('welcome.html', club=club, competitions=competitions)
 
     if placesRequired > club_points:
         flash("Cannot book more places than club points.")
