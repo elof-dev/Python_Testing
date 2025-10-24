@@ -84,6 +84,9 @@ def purchasePlaces():
         flash("Cannot book more places than club points.")
         return render_template('welcome.html', club=club, competitions=competitions) 
 
+    if placesRequired > int(competition['numberOfPlaces']):
+        flash("Cannot book more places than available.")
+        return render_template('welcome.html', club=club, competitions=competitions)
 
     if placesRequired > MAX_BOOKING:
         flash(f"Cannot book more than {MAX_BOOKING} places for this competition.")
