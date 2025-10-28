@@ -15,9 +15,8 @@ from server import app
 
 @pytest.fixture
 def client():
-    """Flask test client fixture.
-    Provides a test client for the Flask application defined in server.py.
-    """
     app.config['TESTING'] = True
     with app.test_client() as client:
+        with client.session_transaction() as session:
+            session['club_name'] = "Club A"
         yield client

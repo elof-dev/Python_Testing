@@ -30,12 +30,12 @@ def test_book_places_with_enough_points(client):
     assert int(server.competitions[0]['numberOfPlaces']) == 1
 
 def test_book_places_without_enough_points(client):
-    server.clubs = [{"name": "Club B", "points": "4"}]
+    server.clubs = [{"name": "Club A", "points": "4"}]
     server.competitions = [{"name": "Comp 2", "numberOfPlaces": "5"}]
 
     response = client.post('/purchasePlaces', data={
         'competition': 'Comp 2',
-        'club': 'Club B',
+        'club': 'Club A',
         'places': '5'
     })
 

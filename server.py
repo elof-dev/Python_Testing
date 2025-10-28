@@ -1,6 +1,7 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 from datetime import datetime
+from flask import session
 
 
 def loadClubs():
@@ -27,12 +28,13 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    email = request.form.get('email', '')
-    email = email.strip()
+    email = request.form.get('email', '').strip()
     club = next((c for c in clubs if c.get('email', '').strip() == email), None)
     if not email or not club:
         flash("Sorry, that email was not found, please try again.")
         return render_template('index.html')
+    # 
+    session['club_name'] = club['name']
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
@@ -58,7 +60,16 @@ def book(competition,club):
 def purchasePlaces():
     MAX_BOOKING = 12
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
+    club_name = session.get('club_name')
+    if not club_name:
+        flash("You must be logged in to book places.")
+        return render_template('index.html', clubs=clubs)
+
+    club = next((c for c in clubs if c['name'] == club_name), None)
+    if not club:
+        flash("Club not found in session.")
+        return render_template('index.html', clubs=clubs)
+
 
     places = request.form.get('places')
     if not places:
