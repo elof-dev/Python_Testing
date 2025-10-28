@@ -2,18 +2,26 @@ import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 from datetime import datetime
 from flask import session
+import logging
 
+
+def load_json_data(filename: str, key: str):
+    try:
+        with open(filename) as f:
+            data = json.load(f)
+            if key not in data:
+                logging.warning(f"Key '{key}' not found in {filename}")
+                return []
+            return data[key]
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logging.warning(f"Unable to load {filename}: {e}")
+        return []
 
 def loadClubs():
-    with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
-
+    return load_json_data("clubs.json", "clubs")
 
 def loadCompetitions():
-    with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
+    return load_json_data("competitions.json", "competitions")
 
 
 app = Flask(__name__)
