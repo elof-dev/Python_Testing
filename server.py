@@ -40,8 +40,7 @@ def showSummary():
     club = next((c for c in clubs if c.get('email', '').strip() == email), None)
     if not email or not club:
         flash("Sorry, that email was not found, please try again.")
-        return render_template('index.html')
-    # 
+        return render_template('index.html', clubs=clubs)
     session['club_name'] = club['name']
     return render_template('welcome.html', club=club, competitions=competitions)
 
