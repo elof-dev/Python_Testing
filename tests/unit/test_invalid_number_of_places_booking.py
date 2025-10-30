@@ -69,7 +69,7 @@ def test_booking_without_places_value(client):
     })
 
     assert response.status_code == 200
-    assert b"Please enter a number of places." in response.data
+    assert b"Invalid number of places." in response.data
     assert int(server.competitions[0]['numberOfPlaces']) == 20
     assert int(server.clubs[0]['points']) == 10
 

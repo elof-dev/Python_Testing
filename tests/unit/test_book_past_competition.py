@@ -17,7 +17,7 @@ def test_can_book_future_competition(client):
     server.competitions = [{"name": "Future Comp", "date": future_date, "numberOfPlaces": "10"}]
     server.clubs = [{"name": "Club A", "email": "a@a.com", "points": "10"}]
 
-    response = client.get('/book/Future Comp/Club A')
+    response = client.get('/book/Future Comp')
 
     assert response.status_code == 200
     assert b"How many places?" in response.data
@@ -28,7 +28,7 @@ def test_cannot_book_past_competition(client):
     server.competitions = [{"name": "Old Comp", "date": past_date, "numberOfPlaces": "10"}]
     server.clubs = [{"name": "Club A", "email": "a@a.com", "points": "10"}]
 
-    response = client.get('/book/Old Comp/Club A')
+    response = client.get('/book/Old Comp')
 
     assert response.status_code == 200
     assert b"This competition has already taken place" in response.data
