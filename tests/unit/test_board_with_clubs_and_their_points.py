@@ -13,9 +13,11 @@ def test_index_page_loads(client):
 
 
 def test_index_page_displays_clubs_points(client):
+    server.clubs = [
+        {"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"}
+    ]
     response = client.get('/')
     data = response.data.decode()
 
-    for club in server.clubs:
-        assert club["name"] in data
-        assert club["points"] in data
+    assert "Simply Lift" in data
+    assert "13" in data
